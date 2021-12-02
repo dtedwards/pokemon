@@ -1,0 +1,140 @@
+body {
+   font-family: sans-serif;
+   margin: 0;
+   background: linear-gradient(to bottom,#DBF7FF,#C5F0FC);
+   width: 100%;
+   padding-bottom: 20px;
+}
+
+h3 {
+   line-height: 1px;
+}
+
+.hidden {
+   display: none;
+}
+
+header#main {
+   display: grid;
+   grid-template-columns: repeat(12, 1fr);
+   background: linear-gradient(#38C23D,#249E28);
+   padding: 10px;
+   margin-bottom: 10px;
+}
+
+#main .title img {
+   height: 2.5em;
+}
+
+#loggedIn form {
+   display: inline;
+}
+
+#trainersDiv {
+   display: grid;
+   grid-template-columns: repeat(5,1fr);
+   gap: 10px 30px;
+   padding: 0px 20px;
+}
+
+.pokebox img {
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
+}
+
+@media screen and (max-width: 600px) { /* Mobile */
+   #main .title {
+      grid-column: span 12;
+      color: white;
+      text-align: center;
+   }
+
+   #main .title h1 {
+      line-height: 1px;
+   }
+
+   #main #loginDiv {
+      grid-column: span 12;
+      text-align: center;
+   }
+
+   .trainerDiv {
+      grid-column: span 5;
+      display: grid;
+      grid-template-columns: repeat(1,1fr);
+   }
+}
+
+@media screen and (min-width: 600px) { /* Desktop */
+   #main .title {
+      grid-column: span 10;
+      color: white;
+      text-align: center;
+   }
+
+   #main .title img,h1 {
+      display: inline;
+   }
+   
+   #main #loginDiv {
+      grid-column: span 2;
+   }
+
+}
+
+.goalmons {
+   display: grid;
+   grid-template-columns: repeat(6,1fr);
+}
+
+.pokebox {
+   display: grid;
+   grid-template-columns: repeat(2,1fr);
+   border: solid #0099FF 1px;
+   border-radius: 10px;
+   margin-bottom: 10px;
+   background: white;
+   padding: 10px;
+}
+.pokebox div {
+   text-align: center;
+}
+
+.pokeball {
+   vertical-align: middle;
+   height: 50px;
+   width: 50px;
+   margin-top: 40px;
+   margin-bottom: 40px;
+}
+
+h1 {
+   text-shadow: -2px 2px 1px #363636;
+}
+.updated {
+   font-size: 75%;
+}
+.logo {
+   height: 1.5em;
+}
+.p1mlist {
+   display: none;
+}
+.sprite {
+   height: 3em;
+}
+
+#trainerName {
+   margin-left: 10px;
+}
+
+#editFrm {
+   padding-left: 20px;
+}
+
+#editFrm label {
+   display: block;
+   margin-bottom: 10px;
+}
+  

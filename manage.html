@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Adventure | Manage</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <header id="main">
+        <div class="title">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/International_Pok%C3%A9mon_logo.svg/1920px-International_Pok%C3%A9mon_logo.svg.png" class="logo" alt="Pokemon Logo" />
+            <h1>Adventure Tracker</h1>
+        </div>
+    </header>
+    
+    <form method="post" action="src/update.php">
+        <fieldset id="editFrm">
+            <legend id="trainerName"></legend>
+        </fieldset>
+    </form>
+    <script type="text/javascript">
+        //Fetch all the current users pokemon
+        //Generate form fields and append to editFrm
+        let editFrm = document.getElementById("editFrm");
+
+        fetch("src/verify.php")
+        .then(response => response.json())
+        .then(function(data) {
+            if(data.auth) {
+                let user = data.user;
+                fetch("src/getall.php")
+                .then(response => response.json())
+                .then(function(data){
+                    data.forEach(function(trainer){
+                        if(trainer.trainername == user) {
+                            document.getElementById("trainerName").innerHTML = trainer.trainername;
+
+                            let editFrm = document.getElementById("editFrm");
+
+                            let locationLbl = document.createElement("label");
+                            locationLbl.innerHTML = "Location: ";
+
+                            let locationInpt = document.createElement("input");
+                            locationInpt.setAttribute("type","text");
+                            locationInpt.setAttribute("name","location");
+                            locationInpt.setAttribute("value",trainer.location);
+
+                            locationLbl.appendChild(locationInpt);
+
+                            editFrm.appendChild(locationLbl);
+
+                            generatePokemon(trainer.pokemon1,trainer.p1level,trainer.p1c,"pokemon1","p1level","p1c",editFrm);
+                            generatePokemon(trainer.pokemon2,trainer.p2level,trainer.p2c,"pokemon2","p2level","p2c",editFrm);
+                            generatePokemon(trainer.pokemon3,trainer.p3level,trainer.p3c,"pokemon3","p3level","p3c",editFrm);
+                            generatePokemon(trainer.pokemon4,trainer.p4level,trainer.p4c,"pokemon4","p4level","p4c",editFrm);
+                            generatePokemon(trainer.pokemon5,trainer.p5level,trainer.p5c,"pokemon5","p5level","p5c",editFrm);
+                            generatePokemon(trainer.pokemon6,trainer.p6level,trainer.p6c,"pokemon6","p6level","p6c",editFrm);
+
+                            generateGoalmon(trainer.fp1,"goalmon1",editFrm);
+                            generateGoalmon(trainer.fp2,"goalmon2",editFrm);
+                            generateGoalmon(trainer.fp3,"goalmon3",editFrm);
+                            generateGoalmon(trainer.fp4,"goalmon4",editFrm);
+                            generateGoalmon(trainer.fp5,"goalmon5",editFrm);
+                            generateGoalmon(trainer.fp6,"goalmon6",editFrm);
+
+                            let submitBtn = document.createElement("input");
+                            submitBtn.setAttribute("type","submit");
+                            submitBtn.setAttribute("value","Submit");
+
+                            editFrm.appendChild(submitBtn);
+                        }
+                    });
+                });
+            } else {
+                console.log("Not authenticated");
+            }
+        });
+
+        function generatePokemon(pokemon,level,comment,pkmnField,pkmnLevelField,pkmnCommentField,div) {
+            let pokemonLbl = document.createElement("label");
+            pokemonLbl.innerHTML = pkmnField + ": ";
+
+            let pokemonInpt = document.createElement("input");
+            pokemonInpt.setAttribute("type","text");
+            pokemonInpt.setAttribute("name",pkmnField);
+            pokemonInpt.setAttribute("value",pokemon);
+            pokemonInpt.setAttribute("placeholder","Pokemon");
+
+            let pokemonLevelInpt = document.createElement("input");
+            pokemonLevelInpt.setAttribute("type","text");
+            pokemonLevelInpt.setAttribute("name",pkmnLevelField);
+            pokemonLevelInpt.setAttribute("value",level);
+            pokemonLevelInpt.setAttribute("placeholder","Level");
+
+            let pokemonCommentInpt = document.createElement("input");
+            pokemonCommentInpt.setAttribute("type","text");
+            pokemonCommentInpt.setAttribute("name",pkmnCommentField);
+            pokemonCommentInpt.setAttribute("value",comment);
+            pokemonCommentInpt.setAttribute("placeholder","Nickname/Comment");
+
+            pokemonLbl.appendChild(pokemonInpt);
+            pokemonLbl.appendChild(pokemonLevelInpt);
+            pokemonLbl.appendChild(pokemonCommentInpt);
+
+            div.appendChild(pokemonLbl);
+        }
+
+        function generateGoalmon(pokemon,pkmnField,div) {
+            let label = document.createElement("label");
+            label.innerHTML = pkmnField + ": ";
+
+            let input = document.createElement("input");
+            input.setAttribute("type","text");
+            input.setAttribute("name",pkmnField);
+            if(pokemon) {
+                input.setAttribute("value",pokemon);
+            } else {
+                input.setAttribute("value","");
+            }
+            input.setAttribute("placeholder","Goal Pokemon");
+
+            label.appendChild(input);
+            
+            div.appendChild(label);
+        }
+    </script>
+</body>
+</html>

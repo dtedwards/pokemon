@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Adventure</title>
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      
+        ga('create', 'UA-28022812-1', 'dtedwards.com');
+        ga('send', 'pageview');
+    </script>
+    <link rel="icon" type="image/png" href="https://superotakuu.blogspot.com/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <header id="main">
+        <div class="title">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/International_Pok%C3%A9mon_logo.svg/1920px-International_Pok%C3%A9mon_logo.svg.png" class="logo" alt="Pokemon Logo" />
+            <h1>Adventure Tracker</h1>
+        </div>
+        <div id="loginDiv">
+            <form method="post" action="src/login.php" id="loginFrm">
+                <input type="password" name="username" placeholder="Your First Name" required> <input type="submit" value="Login">
+            </form>
+            <div id="loggedIn" class="hidden">
+                <div id="currentUserDiv"></div>
+                <form action="manage.html" id="editFrm">
+                    <input type="hidden" name="userEdit" id="userEdit">
+                    <input type="submit" value="Edit">
+                </form>
+                <form method="post" action="src/logout.php" id="logoutFrm">
+                    <input type="submit" value="Log Out">
+                </form>
+            </div>
+        </div>
+    </header>
+    <div id="trainersDiv"></div>
+    <script type="text/javascript">
+        fetch("src/verify.php")
+        .then(response => response.json())
+        .then(function(data){
+            if(data.auth) {
+                document.getElementById("currentUserDiv").innerHTML = "Welcome back " + data.user;
+                document.getElementById("loginFrm").classList.add("hidden");
+                document.getElementById("loggedIn").classList.remove("hidden");
+                document.getElementById("userEdit").setAttribute("value",data.user);
+            }
+        });
+
+        let trainersDiv = document.getElementById("trainersDiv");
+
+        fetch("src/getall.php")
+        .then(response => response.json())
+        .then(function(data){
+            data.forEach(trainer => {
+                let trainerDiv = document.createElement("div");
+                trainerDiv.classList.add("trainerDiv");
+
+                let trainerNameDiv = document.createElement("div");
+
+                let trainernameH3 = document.createElement("h3");
+                trainernameH3.innerHTML = trainer.trainername;
+
+                let trainerLocationP = document.createElement("span");
+                trainerLocationP.innerHTML = trainer.location;
+
+                let goalmonsDiv = document.createElement("div");
+                goalmonsDiv.classList.add("goalmons");
+
+                if(trainer.fp1) { //goalmon 1
+                    generateGoalmon(trainer.fp1,goalmonsDiv);
+                }
+                if(trainer.fp2) { //goalmon 2
+                    generateGoalmon(trainer.fp2,goalmonsDiv);
+                }
+                if(trainer.fp3) { //goalmon 3
+                    generateGoalmon(trainer.fp3,goalmonsDiv);
+                }
+                if(trainer.fp4) { //goalmon 4
+                    generateGoalmon(trainer.fp4,goalmonsDiv);
+                }
+                if(trainer.fp5) { //goalmon 5
+                    generateGoalmon(trainer.fp5,goalmonsDiv);
+                }
+                if(trainer.fp6) { //goalmon 6
+                    generateGoalmon(trainer.fp6,goalmonsDiv);
+                }
+
+                let pokeboxDiv = document.createElement("div");
+                pokeboxDiv.classList.add("pokebox");
+
+                generatePokemon(trainer.pokemon1,trainer.p1c,trainer.p1level,pokeboxDiv);
+                generatePokemon(trainer.pokemon2,trainer.p2c,trainer.p2level,pokeboxDiv);
+                generatePokemon(trainer.pokemon3,trainer.p3c,trainer.p3level,pokeboxDiv);
+                generatePokemon(trainer.pokemon4,trainer.p4c,trainer.p4level,pokeboxDiv);
+                generatePokemon(trainer.pokemon5,trainer.p5c,trainer.p5level,pokeboxDiv);
+                generatePokemon(trainer.pokemon6,trainer.p6c,trainer.p6level,pokeboxDiv);
+
+                let updateDate = new Date(trainer.updated);
+                let updateDiv = document.createElement("div");
+                updateDiv.classList.add("updated");
+                updateDiv.innerHTML = updateDate.getMonth() + "/" + updateDate.getDate() + "/" + updateDate.getFullYear() + " @ " + updateDate.getHours() + ":" + addZero(updateDate.getMinutes());
+
+                trainerNameDiv.appendChild(trainernameH3);
+                trainerDiv.appendChild(trainerNameDiv);
+                trainerDiv.appendChild(trainerLocationP);
+                trainerDiv.appendChild(goalmonsDiv);
+                trainerDiv.appendChild(pokeboxDiv);
+                trainerDiv.appendChild(updateDiv);
+                trainersDiv.appendChild(trainerDiv);
+            });
+        });
+
+        function generateGoalmon(goalmon, div) {
+            let goalmonLink = document.createElement("a");
+            goalmonLink.setAttribute("href","https://pokemondb.net/pokedex/" + goalmon.toLowerCase());
+            goalmonLink.setAttribute("target","_blank");
+
+            let goalmonImage = document.createElement("img");
+            goalmonImage.classList.add("sprite");
+            goalmonImage.setAttribute("src", "https://img.pokemondb.net/sprites/black-white/normal/" + goalmon.toLowerCase() + ".png");
+            goalmonImage.setAttribute("alt", goalmon);
+
+            goalmonLink.appendChild(goalmonImage);
+            div.appendChild(goalmonLink);
+        }
+
+        function generatePokemon(pokemon,nickname = "",level = "", div) {
+            let pokemonCol = document.createElement("div");
+
+            if(pokemon) {
+                let pokemonLink = document.createElement("a");
+                pokemonLink.setAttribute("href", "https://pokemondb.net/pokedex/" + pokemon.toLowerCase());
+                pokemonLink.setAttribute("target", "_blank");
+
+                let pokemonImage = document.createElement("img");
+                pokemonImage.setAttribute("src", "https://img.pokemondb.net/sprites/bank/normal/" + pokemon.toLowerCase() + ".png")
+                pokemonImage.classList.add("pokemon");
+                pokemonImage.setAttribute("alt", pokemon);
+
+                
+                let pokemonNickname = document.createElement("span");
+                if(level && nickname) {
+                    pokemonNickname.innerHTML = level + " " + nickname;
+                } else if (level) {
+                    pokemonNickname.innerHTML = level;
+                } else if (nickname) {
+                    pokemonNickname.innerHTML += nickname;
+                }
+                              
+
+                pokemonLink.appendChild(pokemonImage);
+                pokemonCol.appendChild(pokemonLink);
+                if (nickname || level) { pokemonCol.appendChild(pokemonNickname); }
+            } else {
+                let pokemonImage = document.createElement("img");
+                pokemonImage.setAttribute("src", "https://img.pokemondb.net/sprites/items/poke-ball.png")
+                pokemonImage.classList.add("pokemon","pokeball");
+                pokemonImage.setAttribute("alt", "Pokeball");
+
+                pokemonCol.appendChild(pokemonImage);
+            }
+            div.appendChild(pokemonCol);            
+        }
+
+        function addZero(i) {
+            if (i < 10 ) {
+                i = "0" + i;
+            }
+            return i;
+        }
+    </script>
+</body>
+</html>
